@@ -50,12 +50,14 @@ class Timer {
     /// print the run time
     static void PrintAll() {
         LOG(INFO) << ">>> ===== Printing run time =====";
+        double total_time = 0.0; // Initialize the total time
         for (const auto& r : records_) {
-            LOG(INFO) << "> [ " << r.first << " ] average time usage: "
-                      << std::accumulate(r.second.time_usage_in_ms_.begin(), r.second.time_usage_in_ms_.end(), 0.0) /
-                             double(r.second.time_usage_in_ms_.size())
-                      << " ms , called times: " << r.second.time_usage_in_ms_.size();
+            double avg_time = std::accumulate(r.second.time_usage_in_ms_.begin(), r.second.time_usage_in_ms_.end(), 0.0) /
+                          double(r.second.time_usage_in_ms_.size());
+        total_time += avg_time; // Add the component's average time to the total
+        LOG(INFO) << "> [ " << r.first << " ] average time usage: " << avg_time << " ms , called times: " << r.second.time_usage_in_ms_.size();
         }
+        LOG(INFO) << "Total processing time: " << total_time << " ms"; // Print the total time    
         LOG(INFO) << ">>> ===== Printing run time end =====";
     }
 

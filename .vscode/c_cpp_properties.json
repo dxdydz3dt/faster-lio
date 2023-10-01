@@ -1,0 +1,24 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/malik/catkin_ws_Faster_LIO/devel/include/**",
+        "/home/malik/ws_livox/devel/include/**",
+        "/opt/ros/noetic/include/**",
+        "/home/malik/ws_livox/src/FAST_LIO/include/**",
+        "/home/malik/catkin_ws_Faster_LIO/src/faster-lio/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}

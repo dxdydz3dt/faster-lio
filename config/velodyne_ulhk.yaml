@@ -11,17 +11,17 @@ preprocess:
     time_scale: 1e3             # 兼容不同数据集的时间单位
 
 mapping:
-    acc_cov: 0.1
-    gyr_cov: 0.1
-    b_acc_cov: 0.0001
-    b_gyr_cov: 0.0001
+    acc_cov: 8.1330537434371481e-03
+    gyr_cov: 7.4266825125507141e-03
+    b_acc_cov: 1.2123362494392119e-04
+    b_gyr_cov: 8.6572985145653080e-05
     fov_degree:    360
     det_range:     80
     extrinsic_est_en:  true      # true: enable the online estimation of IMU-LiDAR extrinsic
     extrinsic_T: [ 0, 0, -0.28]
-    extrinsic_R: [ 2.67949e-08,         -1,  0,
-                             1,2.67949e-08,  0,
-                             0,          0,  1,]
+    extrinsic_R: [ 2.67949e-08,  -1,            0,
+                   1,             2.67949e-08,  0,
+                   0,             0,            1,]
 
 publish:
     path_publish_en:  false

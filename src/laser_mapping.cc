@@ -657,7 +657,8 @@ void LaserMapping::ObsModel(state_ikfom &s, esekfom::dyn_share_datastruct<double
 }
 
 /////////////////////////////////////  debug save / show /////////////////////////////////////////////////////
-
+// Record the start time
+auto start_time = std::chrono::high_resolution_clock::now();
 void LaserMapping::PublishPath(const ros::Publisher pub_path) {
     SetPosestamp(msg_body_pose_);
     msg_body_pose_.header.stamp = ros::Time().fromSec(lidar_end_time_);
@@ -671,6 +672,7 @@ void LaserMapping::PublishPath(const ros::Publisher pub_path) {
 }
 
 void LaserMapping::PublishOdometry(const ros::Publisher &pub_odom_aft_mapped) {
+    
     odom_aft_mapped_.header.frame_id = "camera_init";
     odom_aft_mapped_.child_frame_id = "body";
     odom_aft_mapped_.header.stamp = ros::Time().fromSec(lidar_end_time_);  // ros::Time().fromSec(lidar_end_time_);
@@ -686,11 +688,12 @@ void LaserMapping::PublishOdometry(const ros::Publisher &pub_odom_aft_mapped) {
         odom_aft_mapped_.pose.covariance[i * 6 + 4] = P(k, 1);
         odom_aft_mapped_.pose.covariance[i * 6 + 5] = P(k, 2);
     }
+    
     // Save pose and timestamp to the file
     std::ofstream poseFile;
     const std::string outputFilePath = "/home/malik/catkin_ws_Faster_LIO/output/pose.txt";
-    poseFile.open(outputFilePath, std::ios_base::app); // Open in append mode
-    //poseFile << "# timestamp,tx,ty,tz,qx,qy,qz,qw\n";
+
+    poseFile.open(outputFilePath, std::ios_base::app);
 
     poseFile << odom_aft_mapped_.header.stamp.toSec() << " "
              << odom_aft_mapped_.pose.pose.position.x << " "
@@ -702,8 +705,8 @@ void LaserMapping::PublishOdometry(const ros::Publisher &pub_odom_aft_mapped) {
              << odom_aft_mapped_.pose.pose.orientation.w << std::endl;
 
     poseFile.close();
+       
 
-    
     static tf::TransformBroadcaster br;
     tf::Transform transform;
     tf::Quaternion q;
@@ -870,5 +873,11 @@ void LaserMapping::Finish() {
     }
 
     LOG(INFO) << "finish done";
+    // Record the end time
+    auto end_time = std::chrono::high_resolution_clock::now();
+    // Calculate and print the processing time
+    std::chrono::duration<double> elapsed_time = end_time - start_time;
+    std::cout << "Total processing time: " << elapsed_time.count() << " seconds" << std::endl;
+    LOG(INFO) << "Total processing time: " << elapsed_time.count() << "s"; // Print the total time 
 }
 }  // namespace faster_lio
