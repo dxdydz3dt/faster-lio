@@ -133,6 +133,7 @@ class LaserMapping {
     double last_timestamp_imu_ = -1.0;
     double first_lidar_time_ = 0.0;
     bool lidar_pushed_ = false;
+    double total_time_for_savetrajectory;
 
     /// statistics and flags ///
     int scan_count_ = 0;

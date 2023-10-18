@@ -16,6 +16,7 @@ void SigHandle(int sig) {
 }
 
 int main(int argc, char **argv) {
+    double total_time_for_savetrajectory;
     FLAGS_stderrthreshold = google::INFO;
     FLAGS_colorlogtostderr = true;
     google::InitGoogleLogging(argv[0]);
@@ -30,7 +31,10 @@ int main(int argc, char **argv) {
     signal(SIGINT, SigHandle);
     ros::Rate rate(5000);
 
-    // online, almost same with offline, just receive the messages from ros
+    // Record the start time for the entire process
+    auto start_time_total = std::chrono::high_resolution_clock::now();
+
+    // online, almost the same as offline, just receive messages from ROS
     while (ros::ok()) {
         if (faster_lio::options::FLAG_EXIT) {
             break;
@@ -40,12 +44,22 @@ int main(int argc, char **argv) {
         rate.sleep();
     }
 
+    // Record the end time for the entire process
+    auto end_time_total = std::chrono::high_resolution_clock::now();
+
+    // Calculate and print the total processing time
+    std::chrono::duration<double> elapsed_time_total = end_time_total - start_time_total;
+    double total_time = elapsed_time_total.count(); // in seconds
+
     LOG(INFO) << "finishing mapping";
     laser_mapping->Finish();
 
-    faster_lio::Timer::PrintAll();
+    LOG(INFO) << "Total processing time for laser_mapping: " << total_time << " seconds";
+
     LOG(INFO) << "save trajectory to: " << FLAGS_traj_log_file;
     laser_mapping->Savetrajectory(FLAGS_traj_log_file);
+
+    faster_lio::Timer::PrintAll(total_time_for_savetrajectory);
 
     return 0;
 }

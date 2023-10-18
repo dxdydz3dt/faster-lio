@@ -2,7 +2,8 @@
 #include <yaml-cpp/yaml.h>
 #include <execution>
 #include <fstream>
-
+#include <iostream>
+#include <cstdlib>
 #include "laser_mapping.h"
 #include "utils.h"
 
@@ -657,9 +658,10 @@ void LaserMapping::ObsModel(state_ikfom &s, esekfom::dyn_share_datastruct<double
 }
 
 /////////////////////////////////////  debug save / show /////////////////////////////////////////////////////
-// Record the start time
-auto start_time = std::chrono::high_resolution_clock::now();
+    // Record the start time
+    auto start_time = std::chrono::high_resolution_clock::now();
 void LaserMapping::PublishPath(const ros::Publisher pub_path) {
+
     SetPosestamp(msg_body_pose_);
     msg_body_pose_.header.stamp = ros::Time().fromSec(lidar_end_time_);
     msg_body_pose_.header.frame_id = "camera_init";
@@ -799,6 +801,8 @@ void LaserMapping::PublishFrameEffectWorld(const ros::Publisher &pub_laser_cloud
 }
 
 void LaserMapping::Savetrajectory(const std::string &traj_file) {
+    
+       
     std::ofstream ofs;
     ofs.open(traj_file, std::ios::out);
     if (!ofs.is_open()) {
@@ -814,7 +818,7 @@ void LaserMapping::Savetrajectory(const std::string &traj_file) {
     }
 
     ofs.close();
-}
+ }
 
 ///////////////////////////  private method /////////////////////////////////////////////////////////////////////
 template <typename T>
@@ -870,14 +874,18 @@ void LaserMapping::Finish() {
         pcl::PCDWriter pcd_writer;
         LOG(INFO) << "current scan saved to /PCD/" << file_name;
         pcd_writer.writeBinary(all_points_dir, *pcl_wait_save_);
+        
     }
 
     LOG(INFO) << "finish done";
-    // Record the end time
+       // Record the end time
     auto end_time = std::chrono::high_resolution_clock::now();
     // Calculate and print the processing time
     std::chrono::duration<double> elapsed_time = end_time - start_time;
-    std::cout << "Total processing time: " << elapsed_time.count() << " seconds" << std::endl;
-    LOG(INFO) << "Total processing time: " << elapsed_time.count() << "s"; // Print the total time 
+    // Store the processing time in the class member variable
+    total_time_for_savetrajectory = elapsed_time.count();
+    LOG(INFO) << "Total time for saving trajectory: " << total_time_for_savetrajectory << " seconds";
+    
 }
+ 
 }  // namespace faster_lio

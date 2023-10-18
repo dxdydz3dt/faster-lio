@@ -24,6 +24,7 @@ void SigHandle(int sig) {
 }
 
 int main(int argc, char **argv) {
+    double total_time_for_savetrajectory;
     gflags::ParseCommandLineFlags(&argc, &argv, true);
 
     FLAGS_stderrthreshold = google::INFO;
@@ -41,6 +42,9 @@ int main(int argc, char **argv) {
 
     /// handle ctrl-c
     signal(SIGINT, SigHandle);
+    // Record the start time for the entire process
+    auto start_time_total = std::chrono::high_resolution_clock::now();
+
 
     // just read the bag and send the data
     LOG(INFO) << "Opening rosbag, be patient";
@@ -83,15 +87,23 @@ int main(int argc, char **argv) {
 
     LOG(INFO) << "finishing mapping";
     laser_mapping->Finish();
+    // Record the end time for the entire process
+    auto end_time_total = std::chrono::high_resolution_clock::now();
+    // Calculate and print the total processing time
+    std::chrono::duration<double> elapsed_time_total = end_time_total - start_time_total;
+    double total_time = elapsed_time_total.count(); // in seconds
+
+    LOG(INFO) << "Total processing time for Laser Mapping: " << total_time << " seconds";
 
     /// print the fps
     double fps = 1.0 / (faster_lio::Timer::GetMeanTime("Laser Mapping Single Run") / 1000.);
     LOG(INFO) << "Faster LIO average FPS: " << fps;
 
     LOG(INFO) << "save trajectory to: " << FLAGS_traj_log_file;
+
     laser_mapping->Savetrajectory(FLAGS_traj_log_file);
 
-    faster_lio::Timer::PrintAll();
+    faster_lio::Timer::PrintAll(total_time_for_savetrajectory);
     faster_lio::Timer::DumpIntoFile(FLAGS_time_log_file);
 
     return 0;

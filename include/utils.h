@@ -48,7 +48,7 @@ class Timer {
     }
 
     /// print the run time
-    static void PrintAll() {
+    static void PrintAll(double total_time_for_savetrajectory) {
         LOG(INFO) << ">>> ===== Printing run time =====";
         double total_time = 0.0; // Initialize the total time
         for (const auto& r : records_) {
@@ -57,7 +57,8 @@ class Timer {
         total_time += avg_time; // Add the component's average time to the total
         LOG(INFO) << "> [ " << r.first << " ] average time usage: " << avg_time << " ms , called times: " << r.second.time_usage_in_ms_.size();
         }
-        LOG(INFO) << "Total processing time: " << total_time << " ms"; // Print the total time    
+        LOG(INFO) << "Total processing time: " << total_time << " ms"; // Print the total time 
+        LOG(INFO) << "Total processing time of trajectory: " << total_time_for_savetrajectory << " seconds";   
         LOG(INFO) << ">>> ===== Printing run time end =====";
     }
 
