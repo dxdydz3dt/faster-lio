@@ -691,22 +691,23 @@ void LaserMapping::PublishOdometry(const ros::Publisher &pub_odom_aft_mapped) {
         odom_aft_mapped_.pose.covariance[i * 6 + 5] = P(k, 2);
     }
     
-    // Save pose and timestamp to the file
-    std::ofstream poseFile;
-    const std::string outputFilePath = "/home/malik/catkin_ws_Faster_LIO/output/pose.txt";
+// Save pose and timestamp to the file
+std::ofstream poseFile;
+const std::string outputFilePath = "/home/malik/catkin_ws_Faster_LIO/output/pose.txt";
 
-    poseFile.open(outputFilePath, std::ios_base::app);
+poseFile.open(outputFilePath, std::ios_base::app);
 
-    poseFile << odom_aft_mapped_.header.stamp.toSec() << " "
-             << odom_aft_mapped_.pose.pose.position.x << " "
-             << odom_aft_mapped_.pose.pose.position.y << " "
-             << odom_aft_mapped_.pose.pose.position.z << " "
-             << odom_aft_mapped_.pose.pose.orientation.x << " "
-             << odom_aft_mapped_.pose.pose.orientation.y << " "
-             << odom_aft_mapped_.pose.pose.orientation.z << " "
-             << odom_aft_mapped_.pose.pose.orientation.w << std::endl;
+// Set the precision and fixed for the timestamp
+poseFile << std::fixed << std::setprecision(6) << odom_aft_mapped_.header.stamp.toSec() << " "
+         << odom_aft_mapped_.pose.pose.position.x << " "
+         << odom_aft_mapped_.pose.pose.position.y << " "
+         << odom_aft_mapped_.pose.pose.position.z << " "
+         << odom_aft_mapped_.pose.pose.orientation.x << " "
+         << odom_aft_mapped_.pose.pose.orientation.y << " "
+         << odom_aft_mapped_.pose.pose.orientation.z << " "
+         << odom_aft_mapped_.pose.pose.orientation.w << std::endl;
 
-    poseFile.close();
+poseFile.close();
        
 
     static tf::TransformBroadcaster br;
